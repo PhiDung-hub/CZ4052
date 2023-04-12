@@ -4,13 +4,20 @@
 
 ## Startup
 
+Instruction for `npm`, can use other package manager like `yarn`, `pnpm`
+
 1. Install `serve`
 ```bash
-npm i -g serve
+npm install
 ```
 
-2. Startup
+2. Start server
 ```bash
-serve .
+npm start
+```
+
+3. With debug mode
+```bash
+npm dev
 ```
 
