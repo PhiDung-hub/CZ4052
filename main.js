@@ -1,10 +1,10 @@
-import { drawRing, drawServers, setColors, blinkServer} from './canvas.js';
+import { drawRing, drawServers, setColors, blinkServer } from './canvas.js';
 import { getHashFunction } from './hashAlgorithms/hashring.js';
 import { ConsistentHash } from './hashAlgorithms/consistentHash.js';
 import { simulationLog, clearSimulationLog, log } from './log.js';
 
 var isSimulating = false;
-var colors = ['#f44336','#f06292','#ab47bc','#673ab7','#5c6bc0','#2196f3','#01579b','#00acc1','#00897b','#43a047','#aed581','#f4ff81','#fff59d','#ffc109','#ff9800','#ff5722'];
+var colors = ['#f44336', '#f06292', '#ab47bc', '#673ab7', '#5c6bc0', '#2196f3', '#01579b', '#00acc1', '#00897b', '#43a047', '#aed581', '#f4ff81', '#fff59d', '#ffc109', '#ff9800', '#ff5722'];
 var randomArray = [];
 var speed = 1000;
 var procInterval;
@@ -14,7 +14,9 @@ const $speedElement = document.getElementById("simulation-speed");
 $speedElement.addEventListener("change", (event) => {
   speed = event.target.value;
   stopProcess();
-  startProcess();
+  if (isSimulating) {
+    startProcess();
+  }
 })
 
 function initRing() {
@@ -44,7 +46,7 @@ document.getElementById("simulate-button").addEventListener("click", function() 
     let qty = input_qty.value;
     let vnodes = input_vnodes.value;
     for (var i = 0; i < qty; i++) {
-      hash.addServer(vnodes);  
+      hash.addServer(vnodes);
     }
     let servers = hash.getServers();
     drawServers(servers);
@@ -58,7 +60,7 @@ document.getElementById("simulate-button").addEventListener("click", function() 
     document.getElementById('add-server-button').disabled = false;
     document.getElementById('simulation-log-toggle').disabled = false;
     startProcess();
-    
+
   } else {
     simulationLog('Stop simulation')
     stopProcess();
@@ -72,8 +74,8 @@ document.getElementById("simulate-button").addEventListener("click", function() 
     document.getElementById('add-server-button').disabled = true;
     document.getElementById('simulation-log-toggle').disabled = true;
     let del_spans = document.getElementsByClassName("delete-server");
-    while(del_spans.length > 0){
-        del_spans[0].parentNode.removeChild(del_spans[0]);
+    while (del_spans.length > 0) {
+      del_spans[0].parentNode.removeChild(del_spans[0]);
     }
   }
 });
@@ -92,12 +94,12 @@ var deleteServer = function() {
   let servers = hash.getServers();
   if (hash.removeServer(server_name)) {
     let trs = document.getElementsByClassName("server_" + server_name);
-    while(trs.length > 0){
+    while (trs.length > 0) {
       trs[0].parentNode.removeChild(trs[0]);
     }
     drawServers(servers);
   }
-  
+
 }
 
 function createTable(servers) {
@@ -105,10 +107,10 @@ function createTable(servers) {
   let vnodes = document.getElementById("vnodes").value;
   let table = document.createElement('table');
   let rh = document.createElement('tr');
-  let th1 = document.createElement('th'); 
-  let th2 = document.createElement('th'); 
-  let th3 = document.createElement('th'); 
-  let th4 = document.createElement('th'); 
+  let th1 = document.createElement('th');
+  let th2 = document.createElement('th');
+  let th3 = document.createElement('th');
+  let th4 = document.createElement('th');
   let tr, td, span;
   let c = 0;
   let prev = '';
@@ -116,25 +118,25 @@ function createTable(servers) {
   table.classList.add('table');
   table.classList.add('is-fullwidth');
   table.classList.add('simulate-table');
-  
+
   th1.innerHTML = 'Server';
   th2.innerHTML = 'Keys';
   th3.innerHTML = 'Load';
   th4.innerHTML = '';
-  
+
   rh.appendChild(th1);
   rh.appendChild(th2);
   rh.appendChild(th3);
   rh.appendChild(th4);
   table.appendChild(rh)
 
-  
-  servers.forEach( (value, key) => {
-    
-    tr = document.createElement('tr'); 
+
+  servers.forEach((value, key) => {
+
+    tr = document.createElement('tr');
     tr.id = "tr_" + key;
     tr.classList.add('server_' + value.server_name);
-    
+
     td = document.createElement('td');
     td.innerHTML = value.server_name + '<span class="sub">' + key + '</span>';
     tr.appendChild(td);
@@ -154,8 +156,8 @@ function createTable(servers) {
 
     if (prev != value.server_name) {
       prev = value.server_name;
-      
-      
+
+
       span = document.createElement('span');
       span.setAttribute('data-key', key);
       span.setAttribute('data-server', value.server_name);
@@ -195,14 +197,14 @@ function createTable(servers) {
         table.appendChild(trhead);
         c += 1;
       } else {
-        td.appendChild(span);  
+        td.appendChild(span);
       }
       tr.classList.add('main-server');
     } else {
       tr.classList.add('virtual-server');
     }
-    
-    
+
+
     tr.appendChild(td);
 
     table.appendChild(tr);
@@ -211,7 +213,7 @@ function createTable(servers) {
 
   });
 
-  tr = document.createElement('tr'); 
+  tr = document.createElement('tr');
   td = document.createElement('td');
   td.classList.add('tr-totals');
   td.innerHTML = 'Total';
@@ -241,7 +243,7 @@ function createTable(servers) {
 
   let spans = document.getElementsByClassName("delete-server");
   for (let i = 0; i < spans.length; i++) {
-      spans[i].addEventListener('click', deleteServer, false);
+    spans[i].addEventListener('click', deleteServer, false);
   }
 }
 
@@ -254,9 +256,9 @@ function processQueue() {
     totalProc += 1
     document.getElementById('keys_' + res[0]).innerHTML = res[2];
     if (vnodes > 0) {
-      document.getElementById('keys_server_' + res[1]).innerHTML = res[3];  
+      document.getElementById('keys_server_' + res[1]).innerHTML = res[3];
     }
-    
+
 
     document.getElementById('total_keys').innerHTML = totalProc;
     log('Adding to ' + res[1] + ': "' + str + '"');
@@ -264,7 +266,7 @@ function processQueue() {
     updatePercentages();
   } else {
     stopProcess();
-    getRandomWikipedia();  
+    getRandomWikipedia();
   }
 }
 
@@ -306,7 +308,7 @@ function fillRandomArray(data) {
   let arts = data.query.random;
   for (let i in arts) {
     randomArray.push(arts[i].title);
-  }  
+  }
   startProcess();
 }
 
