@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "serve -d .",
-    "run": "serve ."
+    "start": "serve ."
   },
   "keywords": [],
   "author": "",

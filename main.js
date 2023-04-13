@@ -1,5 +1,6 @@
 import { drawRing, drawServers, setColors, blinkServer} from './canvas.js';
 import { addServer, removeServer, addData, resetRing, getServers } from './hashring.js';
+import { ConsistentHash } from './consistentHash.js';
 import { simulationLog, clearSimulationLog, log } from './log.js';
 
 var isSimulating = false;
