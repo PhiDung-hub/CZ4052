@@ -6,15 +6,31 @@ import { simulationLog, clearSimulationLog, log } from './log.js';
 var isSimulating = false;
 var colors = ['#f44336','#f06292','#ab47bc','#673ab7','#5c6bc0','#2196f3','#01579b','#00acc1','#00897b','#43a047','#aed581','#f4ff81','#fff59d','#ffc109','#ff9800','#ff5722'];
 var randomArray = [];
-var speed = 20;
+var speed = 1000;
 var procInterval;
 var totalProc = 0;
 var hash = getHashFunction(document.getElementById("hash-function").value);
+
+const $speedElement = document.getElementById("simulation-speed");
+$speedElement.addEventListener("change", (event) => {
+  speed = event.target.value;
+  stopProcess();
+  startProcess();
+})
 
 function initRing() {
   drawRing();
   log('Waiting for simulation...')
 }
+
+function startProcess() {
+  procInterval = setInterval(processQueue, speed);
+}
+
+function stopProcess() {
+  clearInterval(procInterval);
+}
+
 
 document.getElementById("simulate-button").addEventListener("click", function() {
   let button = this;
@@ -228,15 +244,6 @@ function createTable(servers) {
   for (let i = 0; i < spans.length; i++) {
       spans[i].addEventListener('click', deleteServer, false);
   }
-  
-}
-
-function startProcess() {
-  procInterval = setInterval(processQueue, speed);
-}
-
-function stopProcess() {
-  clearInterval(procInterval);
 }
 
 function processQueue() {
