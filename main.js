@@ -1,5 +1,6 @@
 import { drawRing, drawServers, setColors, blinkServer} from './canvas.js';
 import { addServer, removeServer, addData, resetRing, getServers } from './hashring.js';
+import { RendezvousHash } from './rendezvousHash.js';
 import { ConsistentHash } from './consistentHash.js';
 import { simulationLog, clearSimulationLog, log } from './log.js';
 
@@ -9,6 +10,14 @@ var randomArray = [];
 var speed = 20;
 var procInterval;
 var totalProc = 0;
+
+// var hash_function = document.getElementById("hash-function").value;
+// if (hash_function == 'original') {
+//   var hash = new ConsistentHash();
+// } else if (hash_function == 'rendezvous') {
+//   var hash = new RendezvousHash();
+// }
+var hash = new ConsistentHash();
 
 function initRing() {
   drawRing();
@@ -23,13 +32,13 @@ document.getElementById("simulate-button").addEventListener("click", function() 
     clearSimulationLog()
     simulationLog('Start simulation')
     isSimulating = true;
-    resetRing();
+    hash.resetRing();
     let qty = input_qty.value;
     let vnodes = input_vnodes.value;
     for (var i = 0; i < qty; i++) {
-      addServer(vnodes);  
+      hash.addServer(vnodes);  
     }
-    let servers = getServers();
+    let servers = hash.getServers();
     drawServers(servers);
     createTable(servers);
 
@@ -39,6 +48,7 @@ document.getElementById("simulate-button").addEventListener("click", function() 
     input_qty.disabled = true;
     input_vnodes.disabled = true;
     document.getElementById('add-server-button').disabled = false;
+    document.getElementById('simulation-log-toggle').disabled = false;
     startProcess();
     
   } else {
@@ -52,6 +62,7 @@ document.getElementById("simulate-button").addEventListener("click", function() 
     input_qty.disabled = false;
     input_vnodes.disabled = false;
     document.getElementById('add-server-button').disabled = true;
+    document.getElementById('simulation-log-toggle').disabled = true;
     let del_spans = document.getElementsByClassName("delete-server");
     while(del_spans.length > 0){
         del_spans[0].parentNode.removeChild(del_spans[0]);
@@ -62,8 +73,8 @@ document.getElementById("simulate-button").addEventListener("click", function() 
 
 document.getElementById("add-server-button").addEventListener("click", function() {
   let vnodes = document.getElementById("vnodes").value;
-  addServer(vnodes);
-  let servers = getServers()
+  hash.addServer(vnodes);
+  let servers = hash.getServers()
   drawServers(servers);
   createTable(servers);
 });
@@ -71,8 +82,8 @@ document.getElementById("add-server-button").addEventListener("click", function(
 var deleteServer = function() {
   let key = this.getAttribute("data-key");
   let server_name = this.getAttribute("data-server");
-  let servers = getServers();
-  if (removeServer(server_name)) {
+  let servers = hash.getServers();
+  if (hash.removeServer(server_name)) {
     let trs = document.getElementsByClassName("server_" + server_name);
     while(trs.length > 0){
       trs[0].parentNode.removeChild(trs[0]);
@@ -81,7 +92,6 @@ var deleteServer = function() {
   }
   
 }
-
 
 function createTable(servers) {
   document.getElementById('simulation-area').replaceChildren();
@@ -242,7 +252,7 @@ function processQueue() {
   let res = [];
   if (randomArray.length > 0) {
     let str = randomArray.pop();
-    res = addData(str);
+    res = hash.addData(str);
     totalProc += 1
     document.getElementById('keys_' + res[0]).innerHTML = res[2];
     if (vnodes > 0) {
@@ -307,3 +317,11 @@ window.onload = function(_) {
   initRing();
 };
 
+document.getElementById("simulation-log-toggle").addEventListener("click", function() {
+  var x = document.getElementById("simulation-log");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+});

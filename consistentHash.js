@@ -25,7 +25,7 @@ class ConsistentHash {
     }
 
     getServers() {
-        return servers;
+        return this.servers;
     }
 
     hash_function(string) {
@@ -33,7 +33,7 @@ class ConsistentHash {
     }
 
     addServer(vnodes) {
-        let server_name = "S" + server_qty;
+        let server_name = "S" + this.server_qty;
         let prev_sizes = new Map();
         simulationLog("[ + ] Add new server ${server_name}");
         this.server_qty += 1;
@@ -119,7 +119,7 @@ class ConsistentHash {
 
         // Remove server and vnodes
         removed_server_keys.forEach((_value, key) => {
-            servers.delete(key);
+            this.servers.delete(key);
         });
 
         // Reassign keys
@@ -145,7 +145,7 @@ class ConsistentHash {
     }
 
     addData(str) {
-        let hash = hash_function(str);
+        let hash = this.hash_function(str);
         let k = this.getClosest(hash);
         let server = this.servers.get(k);
         let rs = this.real_servers.get(server.server_name);
