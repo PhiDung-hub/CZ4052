@@ -9,7 +9,7 @@ var randomArray = [];
 var speed = 20;
 var procInterval;
 var totalProc = 0;
-var hash = getHashFunction(document.getElementById("hash-function").value);
+var hash = null;
 
 function initRing() {
   drawRing();
@@ -24,6 +24,7 @@ document.getElementById("simulate-button").addEventListener("click", function() 
     clearSimulationLog()
     simulationLog('Start simulation')
     isSimulating = true;
+    hash = getHashFunction(document.getElementById("hash-function").value);
     hash.resetRing();
     let qty = input_qty.value;
     let vnodes = input_vnodes.value;
@@ -60,7 +61,6 @@ document.getElementById("simulate-button").addEventListener("click", function() 
         del_spans[0].parentNode.removeChild(del_spans[0]);
     }
   }
-
 });
 
 document.getElementById("add-server-button").addEventListener("click", function() {
