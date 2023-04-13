@@ -1,12 +1,13 @@
 import { BaseHash } from "./baseHash.js";
 import { ConsistentHash } from "./consistentHash.js";
 import { simulationLog } from "../log.js";
+import { crc32 } from "./common";
 
 
 class JumpConsistentHash extends ConsistentHash {
 
     hash_function(string) {
-        let key = BigInt(this.crc32(string));
+        let key = BigInt(crc32(string));
         let b = -1;
         let j = 0;
         while (j < this.server_qty) {

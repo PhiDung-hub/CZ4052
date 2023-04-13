@@ -1,45 +1,27 @@
-import { simulationLog } from "../log.js";
-
 class BaseHash {
+  constructor() {
+    this.servers = new Map();
+    this.real_servers = new Map();
+    this.server_qty = 0;
+  }
 
-    constructor() {
-        this.servers = new Map();
-        this.real_servers = new Map();
-        this.server_qty = 0;
-    }
-      
-    resetRing() {
-        this.servers.clear();
-        this.real_servers.clear();
-        this.server_qty = 0;
-    }
+  resetRing() {
+    this.servers.clear();
+    this.real_servers.clear();
+    this.server_qty = 0;
+  }
 
-    crc32(r) {
-        for (var a, o = [], c = 0; c < 256; c++) {
-            a = c;
-            for (var f = 0; f < 8; f++) a = 1 & a ? 3988292384 ^ (a >>> 1) : a >>> 1;
-            o[c] = a;
-        }
-        for (var n = -1, t = 0; t < r.length; t++)
-            n = (n >>> 8) ^ o[255 & (n ^ r.charCodeAt(t))];
-        return (-1 ^ n) >>> 0;
-    }
+  getServers() {
+    return this.servers;
+  }
 
-    getServers() {
-        return this.servers;
-    }
+  hashFunction() { }
 
-    addServer() {
-        
-    }
+  addServer() { }
 
-    removeServer() {
-        
-    }
+  removeServer() { }
 
-    addData() {
-        
-    }
+  addData() { }
 }
 
 export { BaseHash };
