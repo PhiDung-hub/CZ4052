@@ -9,7 +9,7 @@ var randomArray = [];
 var speed = 1000;
 var procInterval;
 var totalProc = 0;
-var hash = getHashFunction(document.getElementById("hash-function").value);
+var hash = null;
 
 const $speedElement = document.getElementById("simulation-speed");
 $speedElement.addEventListener("change", (event) => {
@@ -40,6 +40,7 @@ document.getElementById("simulate-button").addEventListener("click", function() 
     clearSimulationLog()
     simulationLog('Start simulation')
     isSimulating = true;
+    hash = getHashFunction(document.getElementById("hash-function").value);
     hash.resetRing();
     let qty = input_qty.value;
     let vnodes = input_vnodes.value;
