@@ -1,7 +1,7 @@
 import { BaseHash } from "./baseHash.js";
 import { ConsistentHash } from "./consistentHash.js";
 import { simulationLog } from "../log.js";
-import { crc32 } from "./common";
+import { crc32 } from "./common.js";
 
 
 class JumpConsistentHash extends ConsistentHash {
