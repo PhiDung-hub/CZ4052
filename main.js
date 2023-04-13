@@ -10,7 +10,6 @@ var speed = 1000;
 var procInterval;
 var totalProc = 0;
 var hash = null;
-
 const $speedElement = document.getElementById("simulation-speed");
 $speedElement.addEventListener("change", (event) => {
   speed = event.target.value;
@@ -77,7 +76,6 @@ document.getElementById("simulate-button").addEventListener("click", function() 
         del_spans[0].parentNode.removeChild(del_spans[0]);
     }
   }
-
 });
 
 document.getElementById("add-server-button").addEventListener("click", function() {
