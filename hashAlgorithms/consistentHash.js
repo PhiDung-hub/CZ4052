@@ -1,4 +1,5 @@
-import { simulationLog } from "./log.js";
+import { BaseHash } from "./baseHash.js";
+import { simulationLog } from "../log.js";
 
 var crc32 = function (r) {
     for (var a, o = [], c = 0; c < 256; c++) {
@@ -11,22 +12,7 @@ var crc32 = function (r) {
     return (-1 ^ n) >>> 0;
 };
 
-class ConsistentHash {
-    constructor() {
-        this.servers = new Map();
-        this.real_servers = new Map();
-        this.server_qty = 0;
-    }
-      
-    resetRing() {
-        this.servers.clear();
-        this.real_servers.clear();
-        this.server_qty = 0;
-    }
-
-    getServers() {
-        return this.servers;
-    }
+class ConsistentHash extends BaseHash {
 
     hash_function(string) {
         return crc32(string) % 360;
@@ -35,7 +21,7 @@ class ConsistentHash {
     addServer(vnodes) {
         let server_name = "S" + this.server_qty;
         let prev_sizes = new Map();
-        simulationLog("[ + ] Add new server ${server_name}");
+        simulationLog("[ + ] Add new server " + server_name);
         this.server_qty += 1;
         let hash = this.hash_function(server_name);
         this.real_servers.set(server_name, { keys_size: 0 });
@@ -99,7 +85,7 @@ class ConsistentHash {
     }
 
     removeServer(server_name) {
-        simulationLog("[ - ] Remove server ${server_name}");
+        simulationLog("[ - ] Remove server " + server_name);
         if (parseInt(this.real_servers.size) == 1) {
             return false;
         }

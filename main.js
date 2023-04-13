@@ -1,7 +1,6 @@
 import { drawRing, drawServers, setColors, blinkServer} from './canvas.js';
-import { addServer, removeServer, addData, resetRing, getServers } from './hashring.js';
-import { RendezvousHash } from './rendezvousHash.js';
-import { ConsistentHash } from './consistentHash.js';
+import { getHashFunction } from './hashAlgorithms/hashring.js';
+import { ConsistentHash } from './hashAlgorithms/consistentHash.js';
 import { simulationLog, clearSimulationLog, log } from './log.js';
 
 var isSimulating = false;
@@ -10,14 +9,7 @@ var randomArray = [];
 var speed = 20;
 var procInterval;
 var totalProc = 0;
-
-// var hash_function = document.getElementById("hash-function").value;
-// if (hash_function == 'original') {
-//   var hash = new ConsistentHash();
-// } else if (hash_function == 'rendezvous') {
-//   var hash = new RendezvousHash();
-// }
-var hash = new ConsistentHash();
+var hash = getHashFunction(document.getElementById("hash-function").value);
 
 function initRing() {
   drawRing();
