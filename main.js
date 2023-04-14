@@ -1,6 +1,5 @@
 import { drawRing, drawServers, setColors, blinkServer } from './canvas.js';
 import { getHashFunction } from './hashAlgorithms/hashring.js';
-import { ConsistentHash } from './hashAlgorithms/consistentHash.js';
 import { simulationLog, clearSimulationLog, log } from './log.js';
 
 var isSimulating = false;
@@ -41,14 +40,14 @@ document.getElementById("simulate-button").addEventListener("click", function() 
     clearSimulationLog()
     simulationLog('Start simulation')
     isSimulating = true;
-    hash = getHashFunction(document.getElementById("hash-function").value);
-    hash.resetRing();
+    HashRing = getHashFunction(document.getElementById("hash-function").value);
+    HashRing.resetRing();
     let qty = input_qty.value;
     let vnodes = input_vnodes.value;
     for (var i = 0; i < qty; i++) {
-      hash.addServer(vnodes);
+      HashRing.addServer(vnodes);
     }
-    let servers = hash.getServers();
+    let servers = HashRing.getServers();
     drawServers(servers);
     createTable(servers);
 
@@ -81,25 +80,24 @@ document.getElementById("simulate-button").addEventListener("click", function() 
 });
 
 document.getElementById("add-server-button").addEventListener("click", function() {
-  let vnodes = document.getElementById("vnodes").value;
-  hash.addServer(vnodes);
-  let servers = hash.getServers()
+  let replication_factor = document.getElementById("vnodes").value;
+  HashRing.addServer(replication_factor);
+  let servers = HashRing.getServers()
   drawServers(servers);
   createTable(servers);
 });
 
 var deleteServer = function() {
-  let key = this.getAttribute("data-key");
+  // let key = this.getAttribute("data-key");
   let server_name = this.getAttribute("data-server");
-  let servers = hash.getServers();
-  if (hash.removeServer(server_name)) {
+  let servers = HashRing.getServers();
+  if (HashRing.removeServer(server_name)) {
     let trs = document.getElementsByClassName("server_" + server_name);
     while (trs.length > 0) {
       trs[0].parentNode.removeChild(trs[0]);
     }
     drawServers(servers);
   }
-
 }
 
 function createTable(servers) {
@@ -130,9 +128,7 @@ function createTable(servers) {
   rh.appendChild(th4);
   table.appendChild(rh)
 
-
   servers.forEach((value, key) => {
-
     tr = document.createElement('tr');
     tr.id = "tr_" + key;
     tr.classList.add('server_' + value.server_name);
@@ -157,12 +153,12 @@ function createTable(servers) {
     if (prev != value.server_name) {
       prev = value.server_name;
 
-
       span = document.createElement('span');
       span.setAttribute('data-key', key);
       span.setAttribute('data-server', value.server_name);
       span.classList.add('delete-server');
       span.innerHTML = '×';
+      span.style = 'font-size: 1.75rem; line-height: 1;';
 
       if (vnodes > 0) {
         let bg_color = colors[c % colors.length];
@@ -204,13 +200,9 @@ function createTable(servers) {
       tr.classList.add('virtual-server');
     }
 
-
     tr.appendChild(td);
 
     table.appendChild(tr);
-
-
-
   });
 
   tr = document.createElement('tr');
@@ -252,13 +244,12 @@ function processQueue() {
   let res = [];
   if (randomArray.length > 0) {
     let str = randomArray.pop();
-    res = hash.addData(str);
+    res = HashRing.addData(str);
     totalProc += 1
     document.getElementById('keys_' + res[0]).innerHTML = res[2];
     if (vnodes > 0) {
       document.getElementById('keys_server_' + res[1]).innerHTML = res[3];
     }
-
 
     document.getElementById('total_keys').innerHTML = totalProc;
     log('Adding to ' + res[1] + ': "' + str + '"');
@@ -271,7 +262,7 @@ function processQueue() {
 }
 
 function updatePercentages() {
-  let vnodes = document.getElementById("vnodes").value;
+  const replication_factor = document.getElementById("vnodes").value;
 
   const percs = document.getElementsByClassName("percentage");
   let totalPerc = 0;
@@ -284,7 +275,7 @@ function updatePercentages() {
     totalPerc += perc;
   }
 
-  if (vnodes > 0) {
+  if (replication_factor > 0) {
     const percs = document.getElementsByClassName("server_percentage");
     for (let i = 0; i < percs.length; i++) {
       let k = percs[i].id;
@@ -306,8 +297,8 @@ function getRandomWikipedia() {
 
 function fillRandomArray(data) {
   let arts = data.query.random;
-  for (let i in arts) {
-    randomArray.push(arts[i].title);
+  for (let art_idx in arts) {
+    randomArray.push(arts[art_idx].title);
   }
   startProcess();
 }
