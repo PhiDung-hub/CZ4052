@@ -49,7 +49,6 @@ function drawServers(servers) {
     if (value.server_name != prev) ns += 1; 
     drawServer(value.server_name, angle, colors[ns % colors.length], key);
     prev = value.server_name;
-    
   });
 }
 

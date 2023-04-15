@@ -1,39 +1,56 @@
-import { binarySearch } from "./common.js";
+import { crc32, binarySearch } from "./common.js";
 
 class BaseHash {
-  constructor() {
-    this.servers = new Map();
-    this.physical_servers = new Map();
-    this.server_qty = 0;
-  }
+    constructor() {
+        this.real_servers = new Map();
+        this.servers = new Map();
+        this.server_qty = 0;
+    }
 
-  resetRing() {
-    this.servers.clear();
-    this.physical_servers.clear();
-    this.server_qty = 0;
-  }
+    resetRing() {
+        this.servers.clear();
+        this.real_servers.clear();
+        this.server_qty = 0;
+    }
 
-  getServers() {
-    return this.servers;
-  }
+    getServers() {
+      return this.servers;
+    }
 
-  hashFunction() { }
+    /**
+     * It is used to hash the server_name to get the ring position.
+     * @param {String} server_name - the ser_name needed to be hash.
+     */
+    hashRing(server_name) {
+      return crc32(server_name) % 360;
+    }
 
-  addData() { }
+    /**
+     * It is used to hash the string to get the key.
+     * @param {String} string - the data string to hash.
+     */
+    hashFunction(string) { }
 
-  addServer() { }
+    /**
+     * 
+     * @param {String} data_str - data to add to the ring.
+     * */
+    addData(data_str) { }
 
+    /**
+     * Add new server to the ring.
+     * Need to reassign the keys to the new server.
+     * @param {Number} replication_factor - number of virtual servers to add.
+     */
+    addServer(replication_factor) { }
 
-  removeServer() { }
-
-  /**
-   * @param {String} key - key/hash_value of the node to find position.
-   * */
-  getClosestKey(string_key) {
-    let keys = Array.from(this.servers.keys());
-    keys.sort((a, b) => a - b);
-    return binarySearch(keys, string_key);
-  }
+    /**
+     * Remove server from the ring.
+     * Need to reassign the keys to other servers.
+     * @param {String} server_name - name of the server to remove.
+     * */
+    removeServer(server_name) { }
+  
 }
 
 export { BaseHash };

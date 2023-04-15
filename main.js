@@ -8,7 +8,7 @@ var randomArray = [];
 var speed = 1000;
 var procInterval;
 var totalProc = 0;
-var hash = null;
+var HashRing = null;
 const $speedElement = document.getElementById("simulation-speed");
 $speedElement.addEventListener("change", (event) => {
   speed = event.target.value;
@@ -36,6 +36,7 @@ document.getElementById("simulate-button").addEventListener("click", function() 
   let button = this;
   let input_qty = document.getElementById("qty");
   let input_vnodes = document.getElementById("vnodes");
+  
   if (!isSimulating) {
     clearSimulationLog()
     simulationLog('Start simulation')
@@ -86,6 +87,16 @@ document.getElementById("add-server-button").addEventListener("click", function(
   drawServers(servers);
   createTable(servers);
 });
+
+document.getElementById("hash-function").addEventListener("change", function() {
+  if (isSimulating) {
+    document.getElementById("simulate-button").click();
+  }
+  initRing();
+  document.getElementById('simulation-area').replaceChildren();
+  document.getElementById("simulation-log").replaceChildren();
+});
+
 
 var deleteServer = function() {
   // let key = this.getAttribute("data-key");

@@ -7,7 +7,7 @@
  * @param {number} [hi=arr.length - 1] - The upper bound index to end the search at (inclusive).
  * @returns {number} - The element in the array that is closest to the target value.
  */
-export function binarySearch(arr, target, lo = 0, hi = arr.length - 1) {
+export function  binarySearch(arr, target, lo = 0, hi = arr.length - 1) {
   if (target < arr[lo]) {
     return arr[0];
   }
