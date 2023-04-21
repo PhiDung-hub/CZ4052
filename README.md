@@ -21,3 +21,8 @@ npm start
 npm dev
 ```
 
+
+## References
+
+This implementation is a fork of [ionmx](https://github.com/ionmx/consistent-hashing-simulator)
+
