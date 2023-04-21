@@ -17,12 +17,10 @@ class ConsistentHash extends BaseHash {
     server.keys_size += 1;
     real_server.keys_size += 1;
 
-    if (server.keys.has(data_key)) {
-      let c = server.keys.get(data_key);
-      c.push(data_str);
-    } else {
+    if (!server.keys.has(data_key)) {
       server.keys.set(data_key, [data_str]);
     }
+    server.keys.get(data_key).push(data_str);
 
     return [
       server_key,
@@ -91,9 +89,8 @@ class ConsistentHash extends BaseHash {
       let prev_ksize = prev_sizes.get(server_name).key_size;
       if (server_name != server_name && prev_ksize != server.keys_size) {
         simulationLog(
-          `Move ${
-            prev_ksize - server.keys_size
-          } keys from ${server_name} to ${server_name}`
+          `Move ${prev_ksize - server.keys_size} keys
+          from ${server_name} to ${server_name}`
         );
       }
     });

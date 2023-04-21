@@ -47,18 +47,15 @@ class RendezvousHash extends BaseHash {
         server.keys_size += 1;
         real_server.keys_size += 1;
 
-        if (server.keys.has(data_key)) {
-            let c = server.keys.get(data_key);
-            c.push(data_str);
-        } else {
+        if (!server.keys.has(data_key)) {
             server.keys.set(data_key, [data_str]);
         }
+        server.keys.get(data_key).push(data_str);
 
-        if (this.hrw.has(data_key)) {
-            this.hrw.get(data_key).push(data_str);
-        } else {
+        if (!this.hrw.has(data_key)) {
             this.hrw.set(data_key, [data_str]);
         }
+        this.hrw.get(data_key).push(data_str);
 
         return [
             server_key,
@@ -81,7 +78,7 @@ class RendezvousHash extends BaseHash {
           keys_size: 0,
           keys: new Map(),
         });
-      }
+    }
 
     /**
      * Add new server to the ring.
