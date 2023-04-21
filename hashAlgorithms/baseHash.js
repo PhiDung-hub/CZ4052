@@ -1,6 +1,7 @@
 import { crc32, binarySearch } from "./common.js";
 
 class BaseHash {
+  
     constructor() {
         this.real_servers = new Map();
         this.servers = new Map();

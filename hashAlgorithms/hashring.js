@@ -10,6 +10,8 @@ function getHashFunction(hash_function) {
     return new RendezvousHash();
   } else if (hash_function == "jump") {
     return new JumpConsistentHash();
+  } else if (hash_function == "maglev") {
+    return new RendezvousHash();
   }
 }
 
