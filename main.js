@@ -3,7 +3,9 @@ import { getHashFunction } from './hashAlgorithms/hashring.js';
 import { simulationLog, clearSimulationLog, log } from './log.js';
 
 var isSimulating = false;
-var colors = ['#f44336', '#f06292', '#ab47bc', '#673ab7', '#5c6bc0', '#2196f3', '#01579b', '#00acc1', '#00897b', '#43a047', '#aed581', '#f4ff81', '#fff59d', '#ffc109', '#ff9800', '#ff5722'];
+var colors = ['#f44336', '#f06292', '#ab47bc', '#673ab7', '#5c6bc0', '#2196f3', '#01579b', 
+  '#00acc1', '#00897b', '#43a047', '#aed581', '#f4ff81', '#fff59d', '#ffc109', '#ff9800', '#ff5722',
+  '#000111', '#000153', '#222222', '#44444'];
 var randomArray = [];
 var speed = 1000;
 var procInterval;
