@@ -5,15 +5,18 @@ import { crc32 } from "./common.js";
 class JumpConsistentHash extends ConsistentHash {
 
     hashFunction(string) {
+        let server_keys = Array.from(this.servers.keys());
         let key = BigInt(crc32(string));
         let b = -1;
         let j = 0;
-        while (j < this.server_qty) {
+
+        server_keys.forEach((_) => {
             b = j;
-            key = (key * 2862933555777941757n + 1n) % (2n ** 64n);
+            key = (key * 113n + 1n);
             j = Math.floor((b + 1) * (Number(1n << 31n) / Number((key >> 33n) + 1n)));
-        }
-        return b;
+        });
+
+        return b % 3600;
     }
 }
 

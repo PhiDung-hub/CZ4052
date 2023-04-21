@@ -22,7 +22,7 @@ class BaseHash {
      * @param {String} server_name - the ser_name needed to be hash.
      */
     hashRing(server_name) {
-      return crc32(server_name) % 360;
+      return crc32(server_name) % 3600;
     }
 
     /**
